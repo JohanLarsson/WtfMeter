@@ -72,11 +72,11 @@
             </ListBox.ItemsPanel>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Text}" Width="32" Height="19" TextWrapping="Wrap" RenderTransformOrigin="0,0" FontFamily="Verdana" Foreground="{StaticResource FontBrush}" HorizontalAlignment="Center"  TextAlignment="Center" VerticalAlignment="Center" >
+                    <TextBlock Text="{Binding Text}" Width="32" Height="19" TextWrapping="Wrap" RenderTransformOrigin="0.5,0.5" FontFamily="Verdana" Foreground="{StaticResource FontBrush}" HorizontalAlignment="Stretch" TextAlignment="Center" VerticalAlignment="Top">
                         <TextBlock.RenderTransform>
                             <TransformGroup>
-                                <TranslateTransform X="0" Y="-130"/>
-                                <RotateTransform Angle="{Binding Angle}"/>
+                                <TranslateTransform X="130" Y="-130"/>
+                                <RotateTransform Angle="{Binding Angle}" CenterX="130" CenterY="0"/>
                             </TransformGroup>
                         </TextBlock.RenderTransform>
                     </TextBlock>

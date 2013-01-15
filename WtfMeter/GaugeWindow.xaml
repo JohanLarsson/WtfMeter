@@ -10,7 +10,7 @@
   Height="300"
   Width="300">
     <Grid x:Name="LayoutRoot" >
-        <wtfmeter:GaugeControl MouseLeftButtonDown="GaugeControl_MouseLeftButtonDown_1"></wtfmeter:GaugeControl>
+        <wtfmeter:GaugeControl x:Name="WtfMeter" MouseLeftButtonDown="GaugeControlMouseLeftButtonDown" MouseWheel="GaugeControl_OnMouseWheel" CenterText="Wtf/minute"></wtfmeter:GaugeControl>
         <!--<Grid.Resources>
             <Storyboard x:Name="_swipe" x:Key="_swipe">
                 <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="path" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)">

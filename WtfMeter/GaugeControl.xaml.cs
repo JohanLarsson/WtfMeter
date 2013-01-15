@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,25 +24,26 @@ namespace Wtfmeter
     {
         public GaugeControl()
         {
-            CenterText = "WTF/min";
-            Max = 120;
-            Min = 10;
-            MinAngle = 160;
-            MaxAngle = -160;
-            NumberOfTicks = 10;
-            Value = 66;
-            UpdateTicks();
             InitializeComponent();
-
+            var pd = DependencyPropertyDescriptor.FromProperty(MinAngleProperty, typeof(GaugeControl));
+            pd.AddValueChanged(this, UpdateTicks);
+            pd = DependencyPropertyDescriptor.FromProperty(MaxAngleProperty, typeof(GaugeControl));
+            pd.AddValueChanged(this, UpdateTicks);
+            pd = DependencyPropertyDescriptor.FromProperty(MaxProperty, typeof(GaugeControl));
+            pd.AddValueChanged(this, UpdateTicks);
+            pd = DependencyPropertyDescriptor.FromProperty(MinProperty, typeof(GaugeControl));
+            pd.AddValueChanged(this, UpdateTicks);
+            pd = DependencyPropertyDescriptor.FromProperty(NumberOfTicksProperty, typeof(GaugeControl));
+            pd.AddValueChanged(this, UpdateTicks);
         }
 
-        private void UpdateTicks()
+        private void UpdateTicks(object o, EventArgs e)
         {
             double step = (Max - Min)/NumberOfTicks;
             double angleStep = (MaxAngle - MinAngle)/NumberOfTicks;
             var ticks =
-                Enumerable.Range(0, NumberOfTicks)
-                          .Select(i => new TickMark {Text = (Min + i*step).ToString("N0"), Angle = (MinAngle + i*angleStep)});
+                Enumerable.Range(0, NumberOfTicks+1)
+                          .Select(i => new TickMark {Text = (Min + i*step).ToString("N0"), Angle = (MaxAngle - i*angleStep)});
             TickMarks = new ObservableCollection<TickMark>(ticks);
         }
 
@@ -110,6 +112,7 @@ namespace Wtfmeter
         }
 
         public ObservableCollection<TickMark> TickMarks { get; set; }
+
     }
 
     public class TickMark

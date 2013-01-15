@@ -26,10 +26,19 @@ namespace Wtfmeter
             InitializeComponent();
         }
 
-        private void GaugeControl_MouseLeftButtonDown_1(object sender, MouseButtonEventArgs e)
+        private void GaugeControlMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
         }
+
+        private void GaugeControl_OnMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (Math.Sign(e.Delta) < 0)
+                WtfMeter.Value--;
+            else
+                WtfMeter.Value++;
+        }
+
     }
 }
 
