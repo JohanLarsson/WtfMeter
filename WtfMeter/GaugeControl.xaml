@@ -1,0 +1,115 @@
+﻿<UserControl x:Class="Wtfmeter.GaugeControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:wtfmeter="clr-namespace:Wtfmeter"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance Type=wtfmeter:GaugeControl,IsDesignTimeCreatable=True}">
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="FontBrush" Color="#FFF2ECEC"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.Resources>
+            <Storyboard x:Name="_swipe" x:Key="_swipe">
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="path" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)">
+                    <SplineDoubleKeyFrame KeyTime="00:00:0.75" Value="150" x:Name="_needlePos"/>
+                </DoubleAnimationUsingKeyFrames>
+
+            </Storyboard>
+
+            <Storyboard x:Name="_moveGrab" x:Key="_moveGrab">
+                <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="_grabHandle" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)">
+                    <SplineDoubleKeyFrame KeyTime="00:00:0.75" Value="150" x:Name="_grabPos"/>
+                </DoubleAnimationUsingKeyFrames>
+
+            </Storyboard>
+
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="55*"/>
+            <RowDefinition Height="50*"/>
+        </Grid.RowDefinitions>
+        <Ellipse Grid.RowSpan="3">
+            <Ellipse.Fill>
+                <LinearGradientBrush EndPoint="0.742,0.946" StartPoint="0.258,0.054">
+                    <GradientStop x:Name="_colourRangeStart" Color="#FF100F0F" Offset="0"/>
+                    <GradientStop x:Name="_colourRangeEnd" Color="#FF625454" Offset="1"/>
+                </LinearGradientBrush>
+            </Ellipse.Fill>
+        </Ellipse>
+        <Ellipse Margin="1" Grid.RowSpan="3" >
+            <Ellipse.Stroke>
+                <LinearGradientBrush EndPoint="0.783,0.92" StartPoint="0.217,0.08">
+                    <GradientStop Color="#FFE4CACA" Offset="0"/>
+                    <GradientStop Color="#FFB1ADAD" Offset="1"/>
+                </LinearGradientBrush>
+            </Ellipse.Stroke>
+        </Ellipse>
+        <Path  Stretch="Fill" Data="M152.5,76 C152.5,96.39447 112.62733,78.363838 75.472977,78.80822 C36.66341,79.2724 0.5,97.303032 0.5,76 C0.5,34.302502 34.52636,0.5 76.5,0.5 C118.47364,0.5 152.5,34.302502 152.5,76 z" 
+               Opacity="0.4" VerticalAlignment="Top"  HorizontalAlignment="Left">
+            <Path.Fill>
+                <RadialGradientBrush GradientOrigin="2,1">
+                    <RadialGradientBrush.RelativeTransform>
+                        <TransformGroup>
+                            <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="10" ScaleY="10"/>
+                            <SkewTransform CenterX="0.5" CenterY="0.5" AngleX="10.48"/>
+                            <RotateTransform CenterX="0.5" CenterY="0.5"/>
+                        </TransformGroup>
+                    </RadialGradientBrush.RelativeTransform>
+                    <GradientStop Color="#FFFFFFFF"/>
+                    <GradientStop Color="#4CFFFFFF" Offset="1"/>
+                </RadialGradientBrush>
+            </Path.Fill>
+        </Path>
+
+        <TextBlock x:Name="centreText" Width="98" Height="14"  Text="{Binding CenterText}" TextWrapping="Wrap" FontFamily="Verdana"  Foreground="{StaticResource FontBrush}" TextAlignment="Center" VerticalAlignment="Center" Grid.Row="1" />
+        
+        <ListBox Background="{x:Null}" ItemsSource="{Binding TickMarks}" Grid.RowSpan="2" BorderBrush="{x:Null}">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Text}" Width="32" Height="19" TextWrapping="Wrap" RenderTransformOrigin="0,0" FontFamily="Verdana" Foreground="{StaticResource FontBrush}" HorizontalAlignment="Center"  TextAlignment="Center" VerticalAlignment="Center" >
+                        <TextBlock.RenderTransform>
+                            <TransformGroup>
+                                <TranslateTransform X="0" Y="-130"/>
+                                <RotateTransform Angle="{Binding Angle}"/>
+                            </TransformGroup>
+                        </TextBlock.RenderTransform>
+                    </TextBlock>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <Canvas Grid.RowSpan="2">
+            <Path x:Name="path" RenderTransformOrigin="0,1" Width="7" Height="140" Stretch="Fill" Data="M3.32,0.33333333 L6.5,52.5 0.5,52.5 z" Canvas.Left="146" Canvas.Top="8" >
+                <Path.Fill>
+                    <LinearGradientBrush EndPoint="1,0.5" StartPoint="0,0.5">
+                        <GradientStop Color="#FF615A5A" x:Name="_needleHighColour" Offset="0"/>
+                        <GradientStop Color="#FFFFFFFF" x:Name="_needleLowColour"  Offset="1"/>
+                    </LinearGradientBrush>
+                </Path.Fill>
+                <Path.Effect>
+                    <DropShadowEffect />
+                </Path.Effect>
+                <Path.RenderTransform >
+                    <TransformGroup>
+                        <RotateTransform Angle="{Binding Value}" CenterX="0" CenterY="0"/>
+                    </TransformGroup>
+                </Path.RenderTransform>
+            </Path>
+            <Ellipse Width="20" Height="20" Stroke="#FFD2B4B4" Canvas.Left="140" Canvas.Top="140">
+                <Ellipse.Fill>
+                    <RadialGradientBrush>
+                        <GradientStop Color="#FFFFFFFF" Offset="0"/>
+                        <GradientStop Color="#FFD2CACA" Offset="1"/>
+                    </RadialGradientBrush>
+                </Ellipse.Fill>
+            </Ellipse>
+
+        </Canvas>
+    </Grid>
+</UserControl>
