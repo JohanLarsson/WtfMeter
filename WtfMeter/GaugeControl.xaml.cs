@@ -127,9 +127,10 @@ namespace WtfMeter
             get { return (double)GetValue(ValueProperty); }
             set
             {
-                SetValue(ValueProperty, value);
-                if(value<Min || value>Max)
+                if (value < Min || value > Max)
                     return;
+                SetValue(ValueProperty, value);
+
                 double angle = MinAngle + (MaxAngle - MinAngle)*value/(Max - Min);
                 ValueRotation.Angle = angle;
             }
