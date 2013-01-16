@@ -24,6 +24,15 @@ namespace Wtfmeter
     {
         public GaugeControl()
         {
+            Max = 120;
+            Min = 0;
+            MaxAngle = 150;
+            MinAngle = -150;
+            NumberOfTicks = 12;
+            TextRadius = 120;
+            CenterText = "Wtf/minute";
+            UpdateTicks(null,null);
+            Value = 60;
             InitializeComponent();
             var pd = DependencyPropertyDescriptor.FromProperty(MinAngleProperty, typeof(GaugeControl));
             pd.AddValueChanged(this, UpdateTicks);
@@ -43,7 +52,7 @@ namespace Wtfmeter
             double angleStep = (MaxAngle - MinAngle)/NumberOfTicks;
             var ticks =
                 Enumerable.Range(0, NumberOfTicks+1)
-                          .Select(i => new TickMark {Text = (Min + i*step).ToString("N0"), Angle = (MaxAngle - i*angleStep)});
+                          .Select(i => new TickMark {Text = (Max- i*step).ToString("N0"), Angle = (MaxAngle - i*angleStep)});
             TickMarks = new ObservableCollection<TickMark>(ticks);
         }
 
