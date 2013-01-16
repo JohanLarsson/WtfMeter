@@ -28,15 +28,6 @@ namespace WtfMeter
             TickMarks = new ObservableCollection<TickMark>();
             InitializeComponent();
             UpdateTicks(null, null);
-            //Max = 120;
-            //Min = 0;
-            //MaxAngle = 150;
-            //MinAngle = -150;
-            //NumberOfTicks = 12;
-            //TextRadius = 120;
-            //CenterText = "Wtf/minute";
-            //UpdateTicks(null, null);
-            //Value = 0;
             var pd = DependencyPropertyDescriptor.FromProperty(MinAngleProperty, typeof(GaugeControl));
             pd.AddValueChanged(this, UpdateTicks);
             pd = DependencyPropertyDescriptor.FromProperty(MaxAngleProperty, typeof(GaugeControl));
