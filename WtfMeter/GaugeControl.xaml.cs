@@ -24,16 +24,18 @@ namespace Wtfmeter
     {
         public GaugeControl()
         {
-            Max = 120;
-            Min = 0;
-            MaxAngle = 150;
-            MinAngle = -150;
-            NumberOfTicks = 12;
-            TextRadius = 120;
-            CenterText = "Wtf/minute";
-            UpdateTicks(null,null);
-            Value = 60;
+            TickMarks = new ObservableCollection<TickMark>();
             InitializeComponent();
+            UpdateTicks(null,null);
+            //Max = 120;
+            //Min = 0;
+            //MaxAngle = 150;
+            //MinAngle = -150;
+            //NumberOfTicks = 12;
+            //TextRadius = 120;
+            //CenterText = "Wtf/minute";
+            //UpdateTicks(null, null);
+            //Value = 0;
             var pd = DependencyPropertyDescriptor.FromProperty(MinAngleProperty, typeof(GaugeControl));
             pd.AddValueChanged(this, UpdateTicks);
             pd = DependencyPropertyDescriptor.FromProperty(MaxAngleProperty, typeof(GaugeControl));
@@ -52,19 +54,38 @@ namespace Wtfmeter
             double angleStep = (MaxAngle - MinAngle)/NumberOfTicks;
             var ticks =
                 Enumerable.Range(0, NumberOfTicks+1)
-                          .Select(i => new TickMark {Text = (Max- i*step).ToString("N0"), Angle = (MaxAngle - i*angleStep)});
-            TickMarks = new ObservableCollection<TickMark>(ticks);
+                          .Select(i => new TickMark {Text = (Max- i*step).ToString("N0"), Angle = (MaxAngle - i*angleStep)}).ToList();
+            if (!TickMarks.SequenceEqual(ticks))
+            {
+                TickMarks.Clear();
+                foreach (var tickMark in ticks)
+                {
+                    TickMarks.Add(tickMark);
+                }
+            }
         }
 
-        public static readonly DependencyProperty CenterTextProperty = DependencyProperty.Register("centerText", typeof (string), typeof (GaugeControl), new PropertyMetadata(default(string)));
+        public static readonly DependencyProperty CenterTextProperty = DependencyProperty.Register("centerText", typeof (string), typeof (GaugeControl), new PropertyMetadata("Center text"));
 
         public string CenterText
         {
             get { return (string) GetValue(CenterTextProperty); }
-            set { SetValue(CenterTextProperty, value); }
+            set
+            {
+                SetValue(CenterTextProperty, value);
+                centreText.Text = value;
+            }
         }
 
-        public static readonly DependencyProperty MaxProperty = DependencyProperty.Register("Max", typeof (double), typeof (GaugeControl), new PropertyMetadata(default(double)));
+        public static readonly DependencyProperty MinProperty = DependencyProperty.Register("Min", typeof(double), typeof(GaugeControl), new PropertyMetadata(0.0));
+
+        public double Min
+        {
+            get { return (double)GetValue(MinProperty); }
+            set { SetValue(MinProperty, value); }
+        }
+
+        public static readonly DependencyProperty MaxProperty = DependencyProperty.Register("Max", typeof (double), typeof (GaugeControl), new PropertyMetadata(100.0));
 
         public double Max
         {
@@ -72,7 +93,7 @@ namespace Wtfmeter
             set { SetValue(MaxProperty, value); }
         }
 
-        public static readonly DependencyProperty MaxAngleProperty = DependencyProperty.Register("MaxAngle", typeof (double), typeof (GaugeControl), new PropertyMetadata(default(double)));
+        public static readonly DependencyProperty MaxAngleProperty = DependencyProperty.Register("MaxAngle", typeof (double), typeof (GaugeControl), new PropertyMetadata(160.0));
 
         public double MaxAngle
         {
@@ -80,23 +101,15 @@ namespace Wtfmeter
             set { SetValue(MaxAngleProperty, value); }
         }
 
-        public static readonly DependencyProperty MinProperty = DependencyProperty.Register("Min", typeof(double), typeof(GaugeControl), new PropertyMetadata(default(double)));
-
-        public double Min
-        {
-            get { return (double) GetValue(MinProperty); }
-            set { SetValue(MinProperty, value); }
-        }
-
-        public static readonly DependencyProperty MinAngleProperty = DependencyProperty.Register("MinAngle", typeof (double), typeof (GaugeControl), new PropertyMetadata(default(double)));
+        public static readonly DependencyProperty MinAngleProperty = DependencyProperty.Register("MinAngle", typeof(double), typeof(GaugeControl), new PropertyMetadata(-160.0));
 
         public double MinAngle
         {
-            get { return (double) GetValue(MinAngleProperty); }
+            get { return (double)GetValue(MinAngleProperty); }
             set { SetValue(MinAngleProperty, value); }
         }
 
-        public static readonly DependencyProperty NumberOfTicksProperty = DependencyProperty.Register("NumberOfTicks", typeof (int), typeof (GaugeControl), new PropertyMetadata(default(int)));
+        public static readonly DependencyProperty NumberOfTicksProperty = DependencyProperty.Register("NumberOfTicks", typeof(int), typeof(GaugeControl), new PropertyMetadata(10));
 
         public int NumberOfTicks
         {
@@ -104,20 +117,27 @@ namespace Wtfmeter
             set { SetValue(NumberOfTicksProperty, value); }
         }
 
-        public static readonly DependencyProperty TextRadiusProperty = DependencyProperty.Register("TextRadius", typeof (double), typeof (GaugeControl), new PropertyMetadata(default(double)));
+        public static readonly DependencyProperty TextRadiusProperty = DependencyProperty.Register("TextRadius", typeof (double), typeof (GaugeControl), new PropertyMetadata(120.0));
 
         public double TextRadius
         {
             get { return (double) GetValue(TextRadiusProperty); }
-            set { SetValue(TextRadiusProperty, value); }
+            set
+            {
+                SetValue(TextRadiusProperty, value);
+            }
         }
 
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof (double), typeof (GaugeControl), new PropertyMetadata(default(double)));
+        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof (double), typeof (GaugeControl), new PropertyMetadata(50.0));
 
         public double Value
         {
             get { return (double) GetValue(ValueProperty); }
-            set { SetValue(ValueProperty, value); }
+            set
+            {
+                SetValue(ValueProperty, value);
+                ValueRotation.Angle = MinAngle + (MaxAngle - MinAngle)*(value)/(Max - Min);
+            }
         }
 
         public ObservableCollection<TickMark> TickMarks { get; set; }
