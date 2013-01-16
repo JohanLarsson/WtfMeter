@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Wtfmeter
+namespace WtfMeter
 {
     /// <summary>
     /// Interaction logic for GaugeControl.xaml
@@ -26,7 +27,7 @@ namespace Wtfmeter
         {
             TickMarks = new ObservableCollection<TickMark>();
             InitializeComponent();
-            UpdateTicks(null,null);
+            UpdateTicks(null, null);
             //Max = 120;
             //Min = 0;
             //MaxAngle = 150;
@@ -50,11 +51,10 @@ namespace Wtfmeter
 
         private void UpdateTicks(object o, EventArgs e)
         {
-            double step = (Max - Min)/NumberOfTicks;
-            double angleStep = (MaxAngle - MinAngle)/NumberOfTicks;
-            var ticks =
-                Enumerable.Range(0, NumberOfTicks+1)
-                          .Select(i => new TickMark {Text = (Max- i*step).ToString("N0"), Angle = (MaxAngle - i*angleStep)}).ToList();
+            double step = (Max - Min) / NumberOfTicks;
+            double angleStep = (MaxAngle - MinAngle) / NumberOfTicks;
+            var ticks = Enumerable.Range(0, NumberOfTicks + 1)
+                          .Select(i => new TickMark { Text = (Max - i * step).ToString("N0"), Angle = (MaxAngle - i * angleStep) }).ToList();
             if (!TickMarks.SequenceEqual(ticks))
             {
                 TickMarks.Clear();
@@ -65,11 +65,11 @@ namespace Wtfmeter
             }
         }
 
-        public static readonly DependencyProperty CenterTextProperty = DependencyProperty.Register("centerText", typeof (string), typeof (GaugeControl), new PropertyMetadata("Center text"));
+        public static readonly DependencyProperty CenterTextProperty = DependencyProperty.Register("centerText", typeof(string), typeof(GaugeControl), new PropertyMetadata("Center text"));
 
         public string CenterText
         {
-            get { return (string) GetValue(CenterTextProperty); }
+            get { return (string)GetValue(CenterTextProperty); }
             set
             {
                 SetValue(CenterTextProperty, value);
@@ -85,19 +85,19 @@ namespace Wtfmeter
             set { SetValue(MinProperty, value); }
         }
 
-        public static readonly DependencyProperty MaxProperty = DependencyProperty.Register("Max", typeof (double), typeof (GaugeControl), new PropertyMetadata(100.0));
+        public static readonly DependencyProperty MaxProperty = DependencyProperty.Register("Max", typeof(double), typeof(GaugeControl), new PropertyMetadata(100.0));
 
         public double Max
         {
-            get { return (double) GetValue(MaxProperty); }
+            get { return (double)GetValue(MaxProperty); }
             set { SetValue(MaxProperty, value); }
         }
 
-        public static readonly DependencyProperty MaxAngleProperty = DependencyProperty.Register("MaxAngle", typeof (double), typeof (GaugeControl), new PropertyMetadata(160.0));
+        public static readonly DependencyProperty MaxAngleProperty = DependencyProperty.Register("MaxAngle", typeof(double), typeof(GaugeControl), new PropertyMetadata(160.0));
 
         public double MaxAngle
         {
-            get { return (double) GetValue(MaxAngleProperty); }
+            get { return (double)GetValue(MaxAngleProperty); }
             set { SetValue(MaxAngleProperty, value); }
         }
 
@@ -113,30 +113,29 @@ namespace Wtfmeter
 
         public int NumberOfTicks
         {
-            get { return (int) GetValue(NumberOfTicksProperty); }
+            get { return (int)GetValue(NumberOfTicksProperty); }
             set { SetValue(NumberOfTicksProperty, value); }
         }
 
-        public static readonly DependencyProperty TextRadiusProperty = DependencyProperty.Register("TextRadius", typeof (double), typeof (GaugeControl), new PropertyMetadata(120.0));
+        public static readonly DependencyProperty TextRadiusProperty = DependencyProperty.Register("TextRadius", typeof(double), typeof(GaugeControl), new PropertyMetadata(120.0));
 
         public double TextRadius
         {
-            get { return (double) GetValue(TextRadiusProperty); }
+            get { return (double)GetValue(TextRadiusProperty); }
             set
             {
                 SetValue(TextRadiusProperty, value);
             }
         }
 
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof (double), typeof (GaugeControl), new PropertyMetadata(50.0));
+        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(double), typeof(GaugeControl), new PropertyMetadata(50.0));
 
         public double Value
         {
-            get { return (double) GetValue(ValueProperty); }
+            get { return (double)GetValue(ValueProperty); }
             set
             {
                 SetValue(ValueProperty, value);
-                ValueRotation.Angle = MinAngle + (MaxAngle - MinAngle)*(value)/(Max - Min);
             }
         }
 
@@ -148,5 +147,33 @@ namespace Wtfmeter
     {
         public double Angle { get; set; }
         public string Text { get; set; }
+    }
+
+    public class ValueToAngleConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            var gaugeControl = (GaugeControl)values[1];
+            double angle = gaugeControl.MinAngle + (gaugeControl.MaxAngle - gaugeControl.MinAngle) * ((double)values[0]) / (gaugeControl.Max - gaugeControl.Min);
+            return angle;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class NegateConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return -1 * ((double)value);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

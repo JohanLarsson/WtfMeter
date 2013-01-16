@@ -1,6 +1,7 @@
-﻿<Window x:Class="Wtfmeter.GaugeWindow"
+﻿<Window x:Class="WtfMeter.GaugeWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:wtfmeter="clr-namespace:Wtfmeter"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+        xmlns:wtfMeter="clr-namespace:WtfMeter"
         WindowStyle="None"
   ResizeMode="NoResize"
   ShowInTaskbar="False"
@@ -10,7 +11,7 @@
   Height="300"
   Width="300">
     <Grid x:Name="LayoutRoot" >
-        <wtfmeter:GaugeControl x:Name="WtfMeter" MouseLeftButtonDown="GaugeControlMouseLeftButtonDown" MouseWheel="GaugeControl_OnMouseWheel" 
-                               CenterText="Wtf/minute" IsManipulationEnabled="True" Value="25"></wtfmeter:GaugeControl>
+        <wtfMeter:GaugeControl x:Name="WtfMeter" 
+                               CenterText="Wtf/minute" IsManipulationEnabled="True" Value="140" Max="240" MaxAngle="150" MinAngle="-150" NumberOfTicks="12" TextRadius="130"></wtfMeter:GaugeControl>
  </Grid>
 </Window>

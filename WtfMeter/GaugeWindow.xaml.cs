@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Wtfmeter
+namespace WtfMeter
 {
     /// <summary>
     /// Interaction logic for GaugeWindow.xaml
