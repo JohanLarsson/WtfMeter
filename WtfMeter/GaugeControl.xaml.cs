@@ -66,7 +66,7 @@ namespace WtfMeter
         }
 
         public static readonly DependencyProperty CenterTextProperty = DependencyProperty.Register("centerText", typeof(string), typeof(GaugeControl), new PropertyMetadata("Center text"));
-
+        [Category("Common")]
         public string CenterText
         {
             get { return (string)GetValue(CenterTextProperty); }
@@ -78,7 +78,7 @@ namespace WtfMeter
         }
 
         public static readonly DependencyProperty MinProperty = DependencyProperty.Register("Min", typeof(double), typeof(GaugeControl), new PropertyMetadata(0.0));
-
+        [Category("Common")]
         public double Min
         {
             get { return (double)GetValue(MinProperty); }
@@ -86,7 +86,7 @@ namespace WtfMeter
         }
 
         public static readonly DependencyProperty MaxProperty = DependencyProperty.Register("Max", typeof(double), typeof(GaugeControl), new PropertyMetadata(100.0));
-
+        [Category("Common")]
         public double Max
         {
             get { return (double)GetValue(MaxProperty); }
@@ -94,7 +94,7 @@ namespace WtfMeter
         }
 
         public static readonly DependencyProperty MaxAngleProperty = DependencyProperty.Register("MaxAngle", typeof(double), typeof(GaugeControl), new PropertyMetadata(160.0));
-
+        [Category("Common")]
         public double MaxAngle
         {
             get { return (double)GetValue(MaxAngleProperty); }
@@ -102,7 +102,7 @@ namespace WtfMeter
         }
 
         public static readonly DependencyProperty MinAngleProperty = DependencyProperty.Register("MinAngle", typeof(double), typeof(GaugeControl), new PropertyMetadata(-160.0));
-
+        [Category("Common")]
         public double MinAngle
         {
             get { return (double)GetValue(MinAngleProperty); }
@@ -110,7 +110,7 @@ namespace WtfMeter
         }
 
         public static readonly DependencyProperty NumberOfTicksProperty = DependencyProperty.Register("NumberOfTicks", typeof(int), typeof(GaugeControl), new PropertyMetadata(10));
-
+        [Category("Common")]
         public int NumberOfTicks
         {
             get { return (int)GetValue(NumberOfTicksProperty); }
@@ -118,7 +118,7 @@ namespace WtfMeter
         }
 
         public static readonly DependencyProperty TextRadiusProperty = DependencyProperty.Register("TextRadius", typeof(double), typeof(GaugeControl), new PropertyMetadata(120.0));
-
+        [Category("Common")]
         public double TextRadius
         {
             get { return (double)GetValue(TextRadiusProperty); }
@@ -130,12 +130,17 @@ namespace WtfMeter
 
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(double), typeof(GaugeControl), new PropertyMetadata(50.0));
 
+        [Category("Common")]
         public double Value
         {
             get { return (double)GetValue(ValueProperty); }
             set
             {
                 SetValue(ValueProperty, value);
+                if(value<Min || value>Max)
+                    return;
+                double angle = MinAngle + (MaxAngle - MinAngle)*value/(Max - Min);
+                ValueRotation.Angle = angle;
             }
         }
 
@@ -143,10 +148,25 @@ namespace WtfMeter
 
     }
 
-    public class TickMark
+    public class TickMark : DependencyObject
     {
-        public double Angle { get; set; }
-        public string Text { get; set; }
+        public static readonly DependencyProperty AngleProperty =
+            DependencyProperty.Register("Angle", typeof (double), typeof (TickMark), new PropertyMetadata(default(double)));
+
+        public double Angle
+        {
+            get { return (double) GetValue(AngleProperty); }
+            set { SetValue(AngleProperty, value); }
+        }
+
+        public static readonly DependencyProperty TextProperty =
+            DependencyProperty.Register("Text", typeof (string), typeof (TickMark), new PropertyMetadata("kdfg"));
+
+        public string Text
+        {
+            get { return (string) GetValue(TextProperty); }
+            set { SetValue(TextProperty, value); }
+        }
     }
 
     public class ValueToAngleConverter : IMultiValueConverter

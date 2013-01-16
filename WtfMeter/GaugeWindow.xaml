@@ -3,15 +3,15 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
         xmlns:wtfMeter="clr-namespace:WtfMeter"
         WindowStyle="None"
-  ResizeMode="NoResize"
-  ShowInTaskbar="False"
-  AllowsTransparency="True"
-  Background="Transparent"
-  WindowStartupLocation="CenterScreen"
-  Height="300"
-  Width="300">
+        ResizeMode="NoResize"
+        ShowInTaskbar="True"
+        AllowsTransparency="True"
+        Background="{x:Null}"
+        WindowStartupLocation="CenterScreen"
+        Height="300" Width="300" 
+        MouseWheel="GaugeControl_OnMouseWheel" MouseLeftButtonDown="GaugeControlMouseLeftButtonDown">
     <Grid x:Name="LayoutRoot" >
-        <wtfMeter:GaugeControl x:Name="WtfMeter" 
+        <wtfMeter:GaugeControl x:Name="WtfMeter" Focusable="False" MouseWheel="GaugeControl_OnMouseWheel"
                                CenterText="Wtf/minute" IsManipulationEnabled="True" Value="140" Max="240" MaxAngle="150" MinAngle="-150" NumberOfTicks="12" TextRadius="130"></wtfMeter:GaugeControl>
  </Grid>
 </Window>
