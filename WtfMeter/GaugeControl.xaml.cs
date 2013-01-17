@@ -38,6 +38,8 @@ namespace WtfMeter
             pd.AddValueChanged(this, UpdateTicks);
             pd = DependencyPropertyDescriptor.FromProperty(NumberOfTicksProperty, typeof(GaugeControl));
             pd.AddValueChanged(this, UpdateTicks);
+            pd = DependencyPropertyDescriptor.FromProperty(TextRadiusProperty, typeof(GaugeControl));
+            pd.AddValueChanged(this, UpdateTicks);
         }
 
         private void UpdateTicks(object o, EventArgs e)
@@ -45,7 +47,7 @@ namespace WtfMeter
             double step = (Max - Min) / NumberOfTicks;
             double angleStep = (MaxAngle - MinAngle) / NumberOfTicks;
             var ticks = Enumerable.Range(0, NumberOfTicks + 1)
-                          .Select(i => new TickMark { Text = (Max - i * step).ToString("N0"), Angle = (MaxAngle - i * angleStep) }).ToList();
+                          .Select(i => new TickMark { Text = (Max - i * step).ToString("N0"), Angle = (MaxAngle - i * angleStep), Radius = TextRadius}).ToList();
             if (!TickMarks.SequenceEqual(ticks))
             {
                 TickMarks.Clear();
@@ -64,7 +66,7 @@ namespace WtfMeter
             set
             {
                 SetValue(CenterTextProperty, value);
-                centreText.Text = value;
+                CentreText.Text = value;
             }
         }
 
@@ -158,6 +160,15 @@ namespace WtfMeter
         {
             get { return (string) GetValue(TextProperty); }
             set { SetValue(TextProperty, value); }
+        }
+
+        public static readonly DependencyProperty RadiusProperty =
+            DependencyProperty.Register("Radius", typeof (double), typeof (TickMark), new PropertyMetadata(100.0));
+
+        public double Radius
+        {
+            get { return (double) GetValue(RadiusProperty); }
+            set { SetValue(RadiusProperty, value); }
         }
     }
 

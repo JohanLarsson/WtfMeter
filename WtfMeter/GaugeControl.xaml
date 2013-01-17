@@ -1,13 +1,18 @@
-﻿<UserControl x:Class="WtfMeter.GaugeControl"
+﻿<UserControl
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             Name="Gauge"
+             xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:wtfMeter="clr-namespace:WtfMeter"
+             x:Class="WtfMeter.GaugeControl" 
+             x:Name="Gauge"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <SolidColorBrush x:Key="FontBrush" Color="#FFF2ECEC"/>
+        <FontFamily x:Key="Font">Verdana</FontFamily>
+        <System:Double x:Key="FontSize">14</System:Double>
+        <wtfMeter:NegateConverter x:Key="NegateConverter"/>
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -36,13 +41,12 @@
             </Ellipse.Stroke>
         </Ellipse>
         <Path  Stretch="Fill" Data="M152.5,76 C152.5,96.39447 112.62733,78.363838 75.472977,78.80822 C36.66341,79.2724 0.5,97.303032 0.5,76 C0.5,34.302502 34.52636,0.5 76.5,0.5 C118.47364,0.5 152.5,34.302502 152.5,76 z" 
-               Opacity="0.4" VerticalAlignment="Top"  HorizontalAlignment="Left" Grid.ColumnSpan="3">
+			Opacity="0.4" VerticalAlignment="Top"  HorizontalAlignment="Left" Grid.ColumnSpan="3" Margin="0,0,0,-20">
             <Path.Fill>
                 <RadialGradientBrush GradientOrigin="2,1">
                     <RadialGradientBrush.RelativeTransform>
                         <TransformGroup>
                             <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="10" ScaleY="10"/>
-                            <SkewTransform CenterX="0.5" CenterY="0.5" AngleX="10.48"/>
                             <RotateTransform CenterX="0.5" CenterY="0.5"/>
                         </TransformGroup>
                     </RadialGradientBrush.RelativeTransform>
@@ -52,9 +56,9 @@
             </Path.Fill>
         </Path>
 
-        <TextBlock x:Name="centreText" Text="Center Text" TextWrapping="Wrap" FontFamily="Verdana" FontSize="14" Foreground="{StaticResource FontBrush}" TextAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="3"   />
-        
-        <ItemsControl Background="{x:Null}" ItemsSource="{Binding ElementName=Gauge, Path=TickMarks}" Grid.RowSpan="2" BorderBrush="{x:Null}" HorizontalContentAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="3">
+        <TextBlock x:Name="CentreText" Text="Center Text" TextWrapping="Wrap" FontFamily="{DynamicResource Font}" FontSize="{DynamicResource FontSize}" Foreground="{StaticResource FontBrush}" TextAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="3"   />
+
+        <ItemsControl Background="{x:Null}" ItemsSource="{Binding TickMarks, ElementName=Gauge}" Grid.RowSpan="2" BorderBrush="{x:Null}" HorizontalContentAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="3">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid/>
@@ -62,10 +66,10 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Text}" RenderTransformOrigin="0.5,0.5" FontFamily="Verdana" FontSize="14" Foreground="{StaticResource FontBrush}" TextAlignment="Center" HorizontalAlignment="Center" >
+                    <TextBlock Text="{Binding Text}" RenderTransformOrigin="0.5,0.5" FontFamily="{DynamicResource Font}" FontSize="{DynamicResource FontSize}" Foreground="{StaticResource FontBrush}" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" >
                         <TextBlock.RenderTransform>
                             <TransformGroup>
-                                <!--<TranslateTransform x:Name="translateTransform" Y="{Binding ElementName=Gauge, Path=TextRadius, Converter={StaticResource NegateConverter}}"/>-->
+                                <TranslateTransform x:Name="RadiusTranslateTransform" Y="{Binding Radius, Converter={StaticResource NegateConverter}}"/>
                                 <RotateTransform Angle="{Binding Angle}"/>
                             </TransformGroup>
                         </TextBlock.RenderTransform>
